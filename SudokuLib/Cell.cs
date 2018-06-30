@@ -21,6 +21,8 @@ namespace SudokuLib
             }
         }
 
+        
+
         internal delegate void CellEvent(EventArgs args);
         #endregion
         private byte pValue = 0;
@@ -36,5 +38,17 @@ namespace SudokuLib
             }
         }
         internal event CellEvent ValueChanged;
+        private Observer[] observers = new Observer[3];
+
+        internal void AddObserver(Observer observer)
+        {
+            for (int i = 0; i < 3; i++)
+                if(observers[i] == null)
+                {
+                    observers[i] = observer;
+                    return;
+                }
+            throw new Exception();
+        }
     }
 }
