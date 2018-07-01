@@ -1,19 +1,40 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SudokuLib
 {
+    /// <summary>
+    /// Итератор.
+    /// Подбирает все ДОСТУПНЫЕ значения для данной ячейки по-очереди, а затем принуждает следующего итератора сделать то же самое.
+    /// </summary>
     class Iterator
     {
+        /// <summary>
+        /// Ячейка, для которой подбираем значение
+        /// </summary>
         Cell cell;
-        Iterator next;
-        bool[] domain = null;
 
+        /// <summary>
+        /// Следующий итератор
+        /// </summary>
+        Iterator next;
+
+        /// <summary>
+        /// Область определения ячейки 
+        /// </summary>
+        bool[] domain = null;
+        // Нужен здесь для экономии времени на выделение/освобождение памяти
+
+
+        /// <summary>
+        /// Создаёт новый ряд итераторов идущих друг за другом
+        /// </summary>
+        /// <param name="used">Массив использования ячеек</param>
+        /// <param name="cells">Массив ячеек</param>
+        /// <param name="amount">Количество итераторов (Длинна ряда)</param>
+        /// <param name="rnd">Генератор случайных чисел (Зачем он здесь нужен...)</param>
         internal Iterator(bool[,] used, Cell[,] cells, int amount, Random rnd)
         {
+            // Процесс подбора случайной свободной ячейки из верхней линии
             int x, y;
             y = 8 - ((amount-1) / 9);
             do
@@ -21,23 +42,40 @@ namespace SudokuLib
                 x = rnd.Next() % 9;
             } while (used[x, y]);
 
-            cell = cells[x, y];
-            used[x, y] = true;
+            // Когда нашли свободную
+            cell = cells[x, y];     // Забираем
+            used[x, y] = true;      // себе
 
+            // При условии, что мы не опустились до еденицы, создаём следующий итератор
+            // И передаём остатки
             if (amount > 1) next = new Iterator(used, cells, amount - 1, rnd);
         }
 
+
+        /// <summary>
+        /// Начинает процесс подбора значения данным итератором для его ячейки
+        /// </summary>
+        /// <returns>Возвращает TRUE, если последний итератор успешно присвоил значение, и FALSE в противном случае</returns>
         internal bool startGenerate()
         {
+            // Получаем(заменяем) область определения
             domain = cell.domain(domain);
+
+            // Для всех значений от 1 до 9
             for (int i = 1; i < 10; i++)
-                if (domain[i])
+                if (domain[i])  // Если оно доступно
                 {
-                    cell.Value = (byte)i;
-                    if (next == null) return true;
-                    else if (next.startGenerate()) return true;
+                    cell.Value = (byte)i;                           // Пробуем выполнить подстановку
+                    if (next == null) return true;                  // Если это крайний итератор - ГЕНЕРАЦИЯ ЗАВЕРШЕНА
+                    else if (next.startGenerate()) return true;     // Если следующий итератор завершил генерацию - ГЕНЕРАЦИЯ ЗАВЕРШЕНА
                 }
+
+            // Генерация не была завершена, а значить ни одно значение не подошло
+            // Очищаем нашу ячейку
             cell.Value = 0;
+
+            // Возвращаем управление предыдущему итератору
+            // Говоря, что нам ничего не удалось
             return false;
         }
     }

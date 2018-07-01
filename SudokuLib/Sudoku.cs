@@ -1,17 +1,23 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SudokuLib
 {
+    /// <summary>
+    /// Игровое поле судоку
+    /// </summary>
     public class Sudoku
     {
+        /// <summary>
+        /// Массив ячеек
+        /// </summary>
         Cell[,] cells = new Cell[9, 9];
 
+        /// <summary>
+        /// Создаёт совершенно пустой судоку. Для заполнения используйте метод generate()
+        /// </summary>
         public Sudoku()
         {
+            // Создание ячеек
             for (int i = 0; i < 9; i++)
                 for (int j = 0; j < 9; j++)
                     cells[i, j] = new Cell();
@@ -32,6 +38,7 @@ namespace SudokuLib
                     obs.Add(cells[x, y]);
             }
 
+            // Квадраты 3*3
             for (int X = 0; X < 3; X++)
                 for (int Y = 0; Y < 3; Y++)
                 {
@@ -42,6 +49,9 @@ namespace SudokuLib
                 }
         }
 
+        /// <summary>
+        /// Заполняет поле псевдослучайными числами.
+        /// </summary>
         public void generate()
         {
             bool[,] used = new bool[9, 9];
@@ -49,6 +59,10 @@ namespace SudokuLib
             root.startGenerate();
         }
 
+
+        /// <summary>
+        /// Выводит судоку в консоль
+        /// </summary>
         public void print()
         {
             for (int Y = 0; Y < 3; Y++)

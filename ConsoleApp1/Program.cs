@@ -1,8 +1,5 @@
 ﻿using SudokuLib;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -10,19 +7,36 @@ namespace ConsoleApp1
 {
     class Program
     {
+        // Параллельная задача, которая выполняет печать.
+        // Нужна для печати во время генерации
         static Task printer = new Task(Print);
+
+        // Сам судоку
         static Sudoku sudoku = new Sudoku();
+
+        // Точка входа
         static void Main(string[] args)
         {
+            // запуск задачи-Принтера
             printer.Start();
+
+            // Генерация судоку
             sudoku.generate();
 
+            // Обрати внимание, Виктория, что на данном этапе генерация выполняется условно непрерывно
+            // И в то же самое время Task Принтер выполняет метод Print() печатающий судоку в консоль
+            // Выполнение было разбито на два параллельных потока
+
+
+            // Чтобы программа не завершилась, был добавлен бесконечный цикл
             do
             {
                 Thread.Sleep(1500);
             } while (true);
+            // Ибо Console.ReadKey() тут не подходит.
         }
 
+        // Печать судоку каждые 0.15 секунды
         static void Print()
         {
             do
@@ -30,6 +44,8 @@ namespace ConsoleApp1
                 Console.CursorLeft = 0;
                 Console.CursorTop = 0;
                 sudoku.print();
+
+                //Задержка на 0.15 секунд
                 Thread.Sleep(150);
             } while (true);
         }
