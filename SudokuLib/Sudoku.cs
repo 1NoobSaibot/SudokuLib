@@ -42,6 +42,13 @@ namespace SudokuLib
                 }
         }
 
+        public void generate()
+        {
+            bool[,] used = new bool[9, 9];
+            Iterator root = new Iterator(used, cells, 81, new Random());
+            root.startGenerate();
+        }
+
         public void print()
         {
             for (int Y = 0; Y < 3; Y++)
