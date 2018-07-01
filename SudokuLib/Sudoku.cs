@@ -155,24 +155,25 @@ namespace SudokuLib
         /// </summary>
         public void print()
         {
+            Console.WriteLine("||===|===|===||===|===|===||===|===|===||");
             for (int Y = 0; Y < 3; Y++)
             {
                 for (int y = 0; y < 3; y++)
                 {
                     for (int X = 0; X < 3; X++)
                     {
+                        Console.Write("|");
                         for (int x = 0; x < 3; x++)
                         {
                             int v = cells[X * 3 + x, Y * 3 + y].Value;
-                            if (v == 0) Console.Write("  ");
-                            else Console.Write( v + " ");
+                            if (v == 0) Console.Write("|   ");
+                            else Console.Write("| " +  v + " ");
                         }
-                            
-                        Console.Write(' ');
                     }
-                    Console.WriteLine();
+                    Console.WriteLine("||");
+                    if (y < 2) Console.WriteLine("||---|---|---||---|---|---||---|---|---||");
                 }
-                Console.WriteLine();
+                Console.WriteLine("||===|===|===||===|===|===||===|===|===||");
             }
         }
 
