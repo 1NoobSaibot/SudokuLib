@@ -7,10 +7,16 @@ namespace SudokuLib
     /// </summary>
     public class Sudoku
     {
+        #region
+        public delegate void SudokuEvent(Sudoku sender);
+        #endregion
+
+        public event SudokuEvent OnSolved;
         /// <summary>
         /// Массив ячеек
         /// </summary>
         Cell[,] cells = new Cell[9, 9];
+        public int voidCellAmount { get; private set;}
 
         /// <summary>
         /// Создаёт совершенно пустой судоку. Для заполнения используйте метод generate()
@@ -20,7 +26,11 @@ namespace SudokuLib
             // Создание ячеек
             for (int i = 0; i < 9; i++)
                 for (int j = 0; j < 9; j++)
+                {
                     cells[i, j] = new Cell();
+                    cells[i, j].ValueChanged += ValueChanged;
+                }
+                    
 
             // Горизонтальные линии
             for (int y = 0; y < 9; y++)
@@ -47,6 +57,8 @@ namespace SudokuLib
                         for (int y = 0; y < 3; y++)
                             obs.Add(cells[X*3 + x, Y*3 + y]);
                 }
+
+            voidCellAmount = 81;
         }
 
         /// <summary>
@@ -80,10 +92,15 @@ namespace SudokuLib
             // Расставляем пустоты
             createOfVoids(amountOfVoids);
 
+            voidCellAmount = 81;
             // Фиксируем непустые ячейки
             for (int x = 0; x < 9; x++)
                 for (int y = 0; y < 9; y++)
-                    if (cells[x, y].Value != 0) cells[x, y].Fixed = true;
+                    if (cells[x, y].Value != 0)
+                    {
+                        cells[x, y].Fixed = true;
+                        voidCellAmount--;
+                    }
         }
 
         private void createOfVoids(int Voids)
@@ -164,6 +181,28 @@ namespace SudokuLib
         {
             get => cells[x, y].Value;
             set => cells[x, y].Value = value;
+        }
+
+
+        /// <summary>
+        /// Отслеживает изменения ячеек, дабы не пропустить конец игры
+        /// </summary>
+        /// <param name="sender">Изменённая ячейка (источник события)</param>
+        /// <param name="args">Аргументы события</param>
+        private void ValueChanged(Cell sender, Cell.EventArgs args)
+        {
+            switch (args.eventType)
+            {
+                case Cell.EventArgs.EventType.Clear:
+                    voidCellAmount++;
+                    break;
+                case Cell.EventArgs.EventType.Set:
+                    voidCellAmount--;
+                    if (voidCellAmount == 0) if (OnSolved != null) OnSolved(this);
+                    break;
+                case Cell.EventArgs.EventType.Changed:
+                    break;
+            }
         }
     }
 }

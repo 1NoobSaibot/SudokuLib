@@ -7,9 +7,9 @@ namespace ConsoleApp1
 {
     class Program
     {
-        // Параллельная задача, которая выполняет печать.
-        // Нужна для печати во время генерации
-        static Task printer = new Task(Print);
+        // Параллельная задача, которая решает лёгкий судоку.
+        // Нужна для теста режима игры
+        static Task solver = new Task(Solve);
 
         // Сам судоку
         static Sudoku sudoku = new Sudoku();
@@ -17,11 +17,14 @@ namespace ConsoleApp1
         // Точка входа
         static void Main(string[] args)
         {
-            // запуск задачи-Принтера
-            printer.Start();
-
             // Инициализирует поле для игры
-            sudoku.initGame(62);
+            sudoku.initGame(3);
+            
+            // Прикрепление обработчика событтия РЕШЕНО
+            sudoku.OnSolved += SudokuSolved;
+            
+            // запуск Запуск решателя
+            solver.Start();
 
             // Обрати внимание, Виктория, что на данном этапе генерация выполняется условно непрерывно
             // И в то же самое время Task Принтер выполняет метод Print() печатающий судоку в консоль
@@ -36,18 +39,32 @@ namespace ConsoleApp1
             // Ибо Console.ReadKey() тут не подходит.
         }
 
-        // Печать судоку каждые 0.15 секунды
-        static void Print()
+        // Функция потока решающего судоку
+        static void Solve()
         {
-            do
-            {
-                Console.CursorLeft = 0;
-                Console.CursorTop = 0;
-                sudoku.print();
+            sudoku.print();
+            Console.Write("\n" + sudoku.voidCellAmount + "\n\n");
+            for (int y = 0; y < 9; y++)
+                for (int x = 0; x < 9; x++)
+                    if (sudoku[x, y] == 0)
+                    {
+                        for (int i = 1; i < 10; i++)
+                        {
+                            Thread.Sleep(200);
+                            sudoku[x, y] = (byte)i;
+                            if (sudoku[x, y] == i)
+                            {
+                                sudoku.print();
+                                Console.Write("\n" + sudoku.voidCellAmount + "\n\n");
+                            }
+                        }
+                    }
+        }
 
-                //Задержка на 0.15 секунд
-                Thread.Sleep(150);
-            } while (true);
+        // Слушатель события СудокуРешено
+        static void SudokuSolved(Sudoku sender)
+        {
+            Console.WriteLine("Congratulations!!!");
         }
     }
 }
