@@ -16,6 +16,11 @@ namespace ConsoleApp1
         {
             printer.Start();
             sudoku.generate();
+
+            do
+            {
+                Thread.Sleep(1500);
+            } while (true);
         }
 
         static void Print()
@@ -25,7 +30,7 @@ namespace ConsoleApp1
                 Console.CursorLeft = 0;
                 Console.CursorTop = 0;
                 sudoku.print();
-                Thread.Sleep(15);
+                Thread.Sleep(150);
             } while (true);
         }
     }

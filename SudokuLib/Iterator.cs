@@ -15,10 +15,10 @@ namespace SudokuLib
         internal Iterator(bool[,] used, Cell[,] cells, int amount, Random rnd)
         {
             int x, y;
+            y = 8 - ((amount-1) / 9);
             do
             {
                 x = rnd.Next() % 9;
-                y = rnd.Next() % 9;
             } while (used[x, y]);
 
             cell = cells[x, y];
