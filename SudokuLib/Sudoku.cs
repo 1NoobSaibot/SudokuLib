@@ -184,6 +184,12 @@ namespace SudokuLib
             set => cells[x, y].Value = value;
         }
 
+        public bool[] getDomain(int x, int y)
+        {
+            return cells[x, y].domain(null);
+        }
+
+
 
         /// <summary>
         /// Отслеживает изменения ячеек, дабы не пропустить конец игры
