@@ -64,10 +64,10 @@ namespace SudokuLib
         /// <summary>
         /// Заполняет поле псевдослучайными числами.
         /// </summary>
-        private void generate()
+        private void generate(Random rnd)
         {
             bool[,] used = new bool[9, 9];
-            Iterator root = new Iterator(used, cells, 81, new Random());
+            Iterator root = new Iterator(used, cells, 81, rnd);
             root.startGenerate();
         }
 
@@ -75,7 +75,8 @@ namespace SudokuLib
         /// Инициализирует новую игру с указанным числом пустот
         /// </summary>
         /// <param name="amountOfVoids"></param>
-        public void initGame(int amountOfVoids)
+        /// <param name="rnd"></param>
+        public void initGame(int amountOfVoids, Random rnd)
         {
             // Снимаем фиксацию
             for (int x = 0; x < 9; x++)
@@ -90,10 +91,10 @@ namespace SudokuLib
             else if (amountOfVoids < 0) amountOfVoids = 0;
 
             // Генерируем поле
-            generate();
+            generate(rnd);
 
             // Расставляем пустоты
-            createOfVoids(amountOfVoids);
+            createOfVoids(amountOfVoids, rnd);
 
             voidCellAmount = 81;
             // Фиксируем непустые ячейки
@@ -106,7 +107,7 @@ namespace SudokuLib
                     }
         }
 
-        private void createOfVoids(int Voids)
+        private void createOfVoids(int Voids, Random rnd)
         {
             void r90(ref int x, ref int y)
             {
@@ -116,7 +117,6 @@ namespace SudokuLib
             }
             int n4 = Voids / 4;
             int rest = Voids % 4;
-            Random rnd = new Random();
 
             if (rest % 2 == 1) cells[4, 4].Value = 0;
 
