@@ -231,5 +231,28 @@ namespace SudokuLib
                     break;
             }
         }
+
+        /// <summary>
+        /// Возвращает решение, если оно единственное.
+        /// </summary>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
+        /// <returns>Возвращает число, которое сюда можно поставить, если оно только одно. Иначе вернёт 0</returns>
+        public byte isOnlyOneSolution(int x, int y)
+        {
+            bool[] domain = getDomain(x, y);
+            byte res = 0;
+            for (byte i = 1; i < 10; i++)
+                if (domain[i])
+                {
+                    if (res == 0) res = i;
+                    else
+                    {
+                        res = 0;
+                        break;
+                    }
+                }
+            return res;
+        }
     }
 }
