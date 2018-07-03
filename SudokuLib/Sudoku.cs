@@ -80,7 +80,10 @@ namespace SudokuLib
             // Снимаем фиксацию
             for (int x = 0; x < 9; x++)
                 for (int y = 0; y < 9; y++)
+                {
                     cells[x, y].Fixed = false;
+                    cells[x, y].Value = 0;
+                }
 
             // Оставляем число подсказок в допустимых пределах
             if (amountOfVoids > 65) amountOfVoids = 65;
@@ -183,6 +186,29 @@ namespace SudokuLib
             get => cells[x, y].Value;
             set => cells[x, y].Value = value;
         }
+
+        /// <summary>
+        /// Возвращает область определения выбранной ячейки
+        /// </summary>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
+        /// <returns></returns>
+        public bool[] getDomain(int x, int y)
+        {
+            return cells[x, y].domain(null);
+        }
+
+        /// <summary>
+        /// Говорит фиксирована ли ячейка
+        /// </summary>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
+        /// <returns></returns>
+        public bool isFixed(int x, int y)
+        {
+            return cells[x, y].Fixed;
+        }
+
 
 
         /// <summary>
