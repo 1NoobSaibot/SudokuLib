@@ -80,7 +80,10 @@ namespace SudokuLib
             // Снимаем фиксацию
             for (int x = 0; x < 9; x++)
                 for (int y = 0; y < 9; y++)
+                {
                     cells[x, y].Fixed = false;
+                    cells[x, y].Value = 0;
+                }
 
             // Оставляем число подсказок в допустимых пределах
             if (amountOfVoids > 65) amountOfVoids = 65;
