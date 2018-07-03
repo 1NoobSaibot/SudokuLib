@@ -184,9 +184,26 @@ namespace SudokuLib
             set => cells[x, y].Value = value;
         }
 
+        /// <summary>
+        /// Возвращает область определения выбранной ячейки
+        /// </summary>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
+        /// <returns></returns>
         public bool[] getDomain(int x, int y)
         {
             return cells[x, y].domain(null);
+        }
+
+        /// <summary>
+        /// Говорит фиксирована ли ячейка
+        /// </summary>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
+        /// <returns></returns>
+        public bool isFixed(int x, int y)
+        {
+            return cells[x, y].Fixed;
         }
 
 
