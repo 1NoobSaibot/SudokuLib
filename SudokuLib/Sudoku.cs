@@ -64,7 +64,7 @@ namespace SudokuLib
         /// <summary>
         /// Заполняет поле псевдослучайными числами.
         /// </summary>
-        private void generate(Random rnd)
+        private void generate(RandomLocker rnd)
         {
             bool[,] used = new bool[9, 9];
             Iterator root = new Iterator(used, cells, 81, rnd);
@@ -76,7 +76,7 @@ namespace SudokuLib
         /// </summary>
         /// <param name="amountOfVoids"></param>
         /// <param name="rnd"></param>
-        public void initGame(int amountOfVoids, Random rnd)
+        public void initGame(int amountOfVoids, RandomLocker rnd)
         {
             // Снимаем фиксацию
             for (int x = 0; x < 9; x++)
@@ -107,7 +107,7 @@ namespace SudokuLib
                     }
         }
 
-        private void createOfVoids(int Voids, Random rnd)
+        private void createOfVoids(int Voids, RandomLocker rnd)
         {
             void r90(ref int x, ref int y)
             {

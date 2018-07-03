@@ -32,7 +32,7 @@ namespace SudokuLib
         /// <param name="cells">Массив ячеек</param>
         /// <param name="amount">Количество итераторов (Длинна ряда)</param>
         /// <param name="rnd">Генератор случайных чисел (Зачем он здесь нужен...)</param>
-        internal Iterator(bool[,] used, Cell[,] cells, int amount, Random rnd)
+        internal Iterator(bool[,] used, Cell[,] cells, int amount, RandomLocker rnd)
         {
             // Процесс подбора случайной свободной ячейки из верхней линии
             int x, y;
